@@ -16,3 +16,6 @@
 *.docx binary
 *.pptx binary
 *.xlsx binary
+*.tar.gz binary
+*.pickle binary
+*.zip binary

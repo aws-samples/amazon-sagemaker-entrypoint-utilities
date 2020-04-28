@@ -1,4 +1,5 @@
 import os
+from typing import List
 
 from setuptools import find_packages, setup
 
@@ -14,7 +15,7 @@ def read_version():
 
 
 # Declare minimal set for installation
-required_packages = [""]
+required_packages: List[str] = []
 
 setup(
     name=_pkg,

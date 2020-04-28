@@ -4,28 +4,25 @@ from pathlib import Path
 
 import pytest
 
-from smephp.argparse import parse_for_func
+from smepu.argparse import parse_for_func, sm_protocol
 
 
 @pytest.mark.parametrize(
     "test_input,expected",
     [
         (
-            ["--epochs", "7", "--init", "xavier", "--dict_arg", '{"seq": [1,2,3]}'],
-            dict(model_dir="model", train_dir="data/train", epochs=7, init="xavier", dict_arg={"seq": [1, 2, 3]}),
+            ["--epochs", "7", "--init", "xavier", "--dict_arg", '{"seq": [1, 2]}'],
+            dict(model_dir="model", train_dir="data/train", epochs=7, init="xavier", dict_arg={"seq": [1, 2]}),
         )
     ],
 )
 def test_good(test_input, expected):
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--model-dir", type=Path, default=os.environ.get("SM_MODEL_DIR", "model"))
-    parser.add_argument("--train", type=Path, default=os.environ.get("SM_CHANNEL_TRAIN", "data/train"))
-
+    parser = sm_protocol()
     args, train_args = parser.parse_known_args(test_input)
+
     hyperopts = parse_for_func(train_args)
     result = actual_train(args.model_dir, args.train, **hyperopts)
-    print("Result:", result)
-    print("Expected:", expected)
+
     assert result == expected
 
 
@@ -34,21 +31,19 @@ def test_good(test_input, expected):
     "test_input,expected",
     [
         (
-            ["--epochs", "7", "--init", "xavier", "--dict_arg", '{"seq": [7,8,9]}'],
-            dict(model_dir="model", train_dir="data/train", epochs=7, init="xavier", dict_arg={"seq": [1, 2, 3]}),
+            ["--epochs", "7", "--init", "xavier", "--dict_arg", '{"seq": [7,8]}'],
+            dict(model_dir="model", train_dir="data/train", epochs=7, init="xavier", dict_arg={"seq": [1, 2]}),
         )
     ],
 )
 def test_bad(test_input, expected):
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--model-dir", type=Path, default=os.environ.get("SM_MODEL_DIR", "model"))
-    parser.add_argument("--train", type=Path, default=os.environ.get("SM_CHANNEL_TRAIN", "data/train"))
+    parser = sm_protocol()
+    args, train_args = parser.parse_known_args(test_input)
 
     args, train_args = parser.parse_known_args(test_input)
     hyperopts = parse_for_func(train_args)
     result = actual_train(args.model_dir, args.train, **hyperopts)
-    print("Result:", result)
-    print("Not Expected:", expected)
+
     assert result == expected
 
 

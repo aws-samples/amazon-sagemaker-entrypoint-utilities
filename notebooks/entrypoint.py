@@ -1,13 +1,13 @@
-# Make sure to import smephp before you import tqdm or any other module that
+# Make sure to import smepu before you import tqdm or any other module that
 # uses tqdm.
 #
 # NOTE: depending on how you setup your favorite editor with formatter+isort,
 # a few savings may be needed to get the correct order. For e.g., on vscode
 # with black + isort enabled, it may take 2x saves.
 #
-# The 1st save may put smephp after tqdm (or tqdm-dependant modules), and it
-# takes the 2nd (or possibly more) save to rearrange smephp to the top.
-import smephp
+# The 1st save may put smepu after tqdm (or tqdm-dependant modules), and it
+# takes the 2nd (or possibly more) save to rearrange smepu to the top.
+import smepu
 
 from time import sleep
 from typing import Any, Dict, List
@@ -15,7 +15,7 @@ from typing import Any, Dict, List
 from tqdm import tqdm
 
 # Setup logger must be done in the entrypoint script.
-logger = smephp.setup_opinionated_logger(__name__)
+logger = smepu.setup_opinionated_logger(__name__)
 
 
 def main(cfg: Dict[str, Any], train_args: List[str]) -> None:
@@ -23,7 +23,7 @@ def main(cfg: Dict[str, Any], train_args: List[str]) -> None:
     logger.info("train_args: %s", train_args)
 
     # Convert cli args / hyperparameters to kwargs
-    kwargs: Dict[str, Any] = smephp.argparse.parse_for_func(train_args)
+    kwargs: Dict[str, Any] = smepu.argparse.parse_for_func(train_args)
 
     # Invoke a callable using the kwargs.
     estimator = DummyEstimator(**kwargs)
@@ -61,14 +61,14 @@ class DummyEstimator(object):
 
 if __name__ == "__main__":
     # Minimal arg parsers for SageMaker protocol.
-    parser = smephp.argparse.sm_protocol()
+    parser = smepu.argparse.sm_protocol()
     args, train_args = parser.parse_known_args()
 
     # Demonstrate SageMaker checks.
-    if not smephp.is_on_sagemaker():
+    if not smepu.is_on_sagemaker():
         # When dev/testing script locally, it's convenient to auto-create these dirs.
         logger.info("Create model & output dirs prior to underlying function.")
-        smephp.mkdir(args.model_dir)
-        smephp.mkdir(args.output_data_dir)
+        smepu.mkdir(args.model_dir)
+        smepu.mkdir(args.output_data_dir)
 
     main(vars(args), train_args)

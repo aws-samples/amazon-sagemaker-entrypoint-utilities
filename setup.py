@@ -3,7 +3,7 @@ from typing import List
 
 from setuptools import find_packages, setup
 
-_pkg: str = "smephp"
+_pkg: str = "smepu"
 
 
 def read(fname):
@@ -21,7 +21,7 @@ setup(
     name=_pkg,
     packages=find_packages(),
     version=read_version(),
-    description="Utilities for Amazon SageMaker's entrypoint's hyperparameters.",
+    description="Utilities for Amazon SageMaker's entrypoint script.",
     long_description=read("README.md"),
     author="Verdi March",
     author_email="first.last@email.com",

@@ -1,7 +1,8 @@
 import os
+
 from setuptools import find_packages, setup
 
-_pkg: str = "python_project_skeleton"
+_pkg: str = "smephp"
 
 
 def read(fname):
@@ -13,16 +14,15 @@ def read_version():
 
 
 # Declare minimal set for installation
-required_packages = ["boto3", "paramiko>= 2.7.0"]
+required_packages = [""]
 
 setup(
     name=_pkg,
     packages=find_packages(),
-    entry_points={"console_scripts": [f"{_pkg} = {_pkg}.__main__:main"]},
     version=read_version(),
-    description="This package does x,y,z.",
+    description="Utilities for Amazon SageMaker's entrypoint's hyperparameters.",
     long_description=read("README.md"),
-    author="Firstname Lastname",
+    author="Verdi March",
     author_email="first.last@email.com",
     url=f"https://github.com/abcd/{_pkg}/",
     download_url="",
@@ -32,18 +32,18 @@ setup(
         "Source Code": f"https://github.com/abcd/{_pkg}/",
     },
     license="MIT",
-    keywords="word1 word2 word3",
+    keywords="Amazon SageMaker entrypoint hyperparameters",
     platforms=["any"],
     classifiers=[
-        "Development Status :: 5 - Production/Stable",
+        "Development Status :: 3 - Alpha",
+        "Environment :: Console",
         "Intended Audience :: Developers",
-        "Intended Audience :: System Administrators",
-        "Natural Language :: English",
+        "Intended Audience :: Science/Research",
         "License :: OSI Approved :: MIT License",
-        "Programming Language :: Python",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3.7",
-        "Programming Language :: Python :: 3.8",
+        "Natural Language :: English",
+        "Programming Language :: Python :: 3 :: Only",
+        "Topic :: Scientific/Engineering :: Artificial Intelligence",
+        "Topic :: Software Development :: Libraries :: Python Modules",
     ],
     python_requires=">=3.6.0",
     install_requires=required_packages,

@@ -1,0 +1,16 @@
+# Let vscode to know about where to look for modules. This affects the editor
+# (e.g., code lens, etc.), but not the terminals.
+#
+# You need this line in .vscode/settings.json:
+# {
+#     "python.envFile": "${workspaceFolder}/.vscenv"
+# }
+#
+# For terminals, look at settings.json "terminal.integrated.env.{linux,osx}".
+# Example:
+# {
+#     "terminal.integrated.env.linux": {
+#         "PYTHONPATH": "${workspaceFolder}/src:${env:PYTHONPATH}"
+#     }
+# }
+PYTHONPATH=./src:$PYTHONPATH

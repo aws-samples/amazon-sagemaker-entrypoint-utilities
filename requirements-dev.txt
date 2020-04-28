@@ -1,0 +1,9 @@
+autoflake
+black
+flake8
+pydocstyle
+pytest
+mypy
+isort
+rope
+tox

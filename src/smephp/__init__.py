@@ -25,29 +25,33 @@ except pkg_resources.DistributionNotFound:
 # progress bar will be printed much less frequently.
 
 if is_on_sagemaker():
-    import tqdm
-    from tqdm import auto
+    # print() to ensure messages reach CloudWatch regardless of logger setup.
+    print("SM_HOSTS: silencing tqdm.")
+    try:
+        import tqdm
+        from tqdm import auto
+    except ImportError:
+        print("SM_HOSTS: could not import tqdm, so do nothing.")
+    else:
+        # Original tqdm callables
+        old_auto = auto.tqdm
+        old_tqdm = tqdm.tqdm
+        old_trange = tqdm.trange
 
-    # Make sure this is sent to CloudWatch, regardless of how logger is setup.
-    print("Env. var SM_HOSTS detected. Silencing tqdm as we're likely to run on SageMaker...")
+        def no_auto(*a, **k):
+            k["disable"] = True
+            return old_auto(*a, **k)
 
-    # Original tqdm callables
-    old_auto = auto.tqdm
-    old_tqdm = tqdm.tqdm
-    old_trange = tqdm.trange
+        def nop_tqdm(*a, **k):
+            k["disable"] = True
+            return old_tqdm(*a, **k)
 
-    def no_auto(*a, **k):
-        k["disable"] = True
-        return old_auto(*a, **k)
+        def no_trange(*a, **k):
+            k["disable"] = True
+            return old_trange(*a, **k)
 
-    def nop_tqdm(*a, **k):
-        k["disable"] = True
-        return old_tqdm(*a, **k)
+        auto.tqdm = no_auto
+        tqdm.tqdm = nop_tqdm
+        tqdm.trange = no_trange
 
-    def no_trange(*a, **k):
-        k["disable"] = True
-        return old_trange(*a, **k)
-
-    auto.tqdm = no_auto
-    tqdm.tqdm = nop_tqdm
-    tqdm.trange = no_trange
+        print("SM_HOSTS: tqdm silenced.")

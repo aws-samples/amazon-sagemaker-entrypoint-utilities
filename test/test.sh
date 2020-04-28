@@ -15,6 +15,10 @@ get_bin_dir() {
     echo -n ${BIN_DIR}
 }
 
-cmd="python $(get_bin_dir)/../notebooks/entrypoint.py --init xavier $@"
+echo "#####################################################"
+echo "# To see the effect of notqdm, set env. var SM_HOST #"
+echo "#####################################################"
+
+cmd="python $(get_bin_dir)/../notebooks/entrypoint.py --epochs 4 $@"
 echo $cmd
 eval $cmd

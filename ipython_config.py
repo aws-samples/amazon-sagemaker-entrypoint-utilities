@@ -1,6 +1,6 @@
 import os
-from pathlib import Path
 import subprocess
+from pathlib import Path
 
 ####################################################################################################
 # Additional PYTHONPATH to allow notebooks to import custom modules at a few pre-defined places.

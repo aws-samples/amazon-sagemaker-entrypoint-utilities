@@ -13,4 +13,4 @@
 #         "PYTHONPATH": "${workspaceFolder}/src:${env:PYTHONPATH}"
 #     }
 # }
-PYTHONPATH=src:${PWD}/src:${PYTHONPATH}
+PYTHONPATH=src:${PYTHONPATH}

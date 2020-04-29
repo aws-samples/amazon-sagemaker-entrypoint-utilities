@@ -2,17 +2,16 @@
 # uses tqdm.
 #
 # NOTE: depending on how you setup your favorite editor with formatter+isort,
-# a few savings may be needed to get the correct order. For e.g., on vscode
-# with black + isort enabled, it may take 2x saves.
+# a few savings may be needed to bring smepu to the near top. For e.g., on
+# vscode with black + isort enabled, it may take 2x saves.
 #
 # The 1st save may put smepu after tqdm (or tqdm-dependant modules), and it
 # takes the 2nd (or possibly more) save to rearrange smepu to the top.
 import smepu
 
-from time import sleep
 from typing import Any, Dict, List
 
-from tqdm import tqdm
+from dummyest import DummyEstimator
 
 # Setup logger must be done in the entrypoint script.
 logger = smepu.setup_opinionated_logger(__name__)
@@ -31,32 +30,6 @@ def main(cfg: Dict[str, Any], train_args: List[str]) -> None:
 
     # Start training, which will show tqdm bar.
     estimator.fit()
-
-
-class DummyEstimator(object):
-    """Simulate tqdm-dependant ML toolkits.
-
-    Known cases: gluonts, run_ner.py (from huggingface/transformers).
-    """
-
-    def __init__(self, epochs: int = 2, init: str = "uniform") -> None:
-        """Initialize a ``DummyEstimator`` instance.
-
-        Args:
-            epochs (int, optional): The number of training epochs]. Defaults to 2.
-            init (str, optional): Weight initialization. Defaults to "uniform".
-        """
-        self.epochs = epochs
-        self.init = str(init)
-
-    def __str__(self) -> str:
-        return f'{self.__class__.__name__}(epochs={self.epochs}, init="{self.init}")'
-
-    def fit(self, *args, **kwargs) -> None:
-        for epoch in range(1, 1 + self.epochs):
-            for i in tqdm(range(3)):
-                sleep(1.0)
-            logger.info("Epoch %s", epoch)
 
 
 if __name__ == "__main__":

@@ -33,20 +33,15 @@ def setup_opinionated_logger(name: str, level: int = logging.INFO):
     logging.basicConfig(
         level=level, format=fmt, datefmt=datefmt,
     )
-    logger = logging.getLogger(name)
-    logger.setLevel(level)
 
     if not logger_has_stdeo(logging.root):
-        # Training: no logging handler, so we need to setup one to stdout.
+        # Training: if no logging handler to stdout or stderr, setup one to stdout.
         # Reason to use stdout: xgboost script mode swallows stderr.
         print("0000: Root logger has no handler. Likely this is training on SageMaker.")
-        print("0100: Add logging handle to stdout.")
         ch = logging.StreamHandler(sys.stdout)
-        print("1000: created stream handler")
         ch.setFormatter(logging.Formatter(fmt, datefmt=datefmt))
-        print("2000: formatted stream handler")
-        logger.addHandler(ch)
-        print("3000: added stream handler to logger")
+        logging.getLogger().addHandler(ch)
+        print("1000: added stdout handler to root logger")
 
     def print_logging_setup(logger):
         """Walkthrough logger hierarchy and print details of each logger.
@@ -58,6 +53,8 @@ def setup_opinionated_logger(name: str, level: int = logging.INFO):
             print("level: {}, name: {}, handlers: {}".format(lgr.level, lgr.name, lgr.handlers))
             lgr = lgr.parent
 
+    logger = logging.getLogger(name)
+    logger.setLevel(level)
     print_logging_setup(logger)
 
     return logger

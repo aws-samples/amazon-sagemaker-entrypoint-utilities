@@ -54,20 +54,21 @@ def parse_for_func(cli_args: List[str]) -> Dict[str, Any]:
     it = iter(cli_args)
     try:
         # Each iteration swallows ["--kwarg", "value"]
+        expected = 0
         while True:
             # Get --key
             key = next(it)[2:]
+            expected += 1
 
             # Get the value. Warn if it looks fishy.
-            value_seen = False
             value = next(it)
+            expected -= 1
             if value[:2] == "--":
                 warnings.warn(f'Fishy cli args / hyperparams: {key}="{value}"')
             d[key] = value
-            value_seen = True
     except StopIteration:
-        if not value_seen:
-            warnings.warn(f"CLI arg --{key} has no value, so ignored")
+        if expected > 1:
+            raise ValueError(f"CLI arg --{key} has no value, so ignored")
 
     # Infer data types.
     dd = {k: infer_dtype(v) for k, v in d.items()}

@@ -3,6 +3,8 @@ import pathlib
 import pkg_resources
 
 from . import argparse  # noqa
+from .argparse import _list as list  # noqa
+from .argparse import _set as set  # noqa
 from .core import is_on_sagemaker, mkdir, pathify, setup_opinionated_logger  # noqa
 
 _pkg_dir: pathlib.Path = pathlib.Path(__file__).resolve().parent

@@ -19,6 +19,19 @@ echo "#####################################################"
 echo "# To see the effect of notqdm, set env. var SM_HOST #"
 echo "#####################################################"
 
-cmd="python $(get_bin_dir)/../src/entrypoint/tiny-example/entrypoint.py --epochs 4 $@"
+# callbacks=
+declare -a complex_args=(
+    "--callbacks.__class__"
+    "smepu.list"
+    "--callbacks.0.__class__"
+    "dummyest.DummyCallback"
+    "--callbacks.0.name"
+    "EarlyStopper"
+    "--callbacks.1.__class__"
+    "dummyest.DummyCallback"
+    "--callbacks.1.0"
+    "Checkpointer"
+)
+cmd="python $(get_bin_dir)/../src/entrypoint/tiny-example/entrypoint.py --epochs 2 ${complex_args[@]}"
 echo $cmd
 eval $cmd

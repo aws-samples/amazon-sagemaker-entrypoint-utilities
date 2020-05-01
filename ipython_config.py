@@ -1,12 +1,13 @@
 import os
 import subprocess
 from pathlib import Path
+from typing import Union
 
 ####################################################################################################
 # Additional PYTHONPATH to allow notebooks to import custom modules at a few pre-defined places.
 
 
-def sys_path_append(o: os.PathLike) -> str:
+def sys_path_append(o: Union[str, os.PathLike]) -> str:
     posix_path: str = o.as_posix() if isinstance(o, Path) else Path(o).as_posix()
     return 'sys.path.append("{}")'.format(posix_path)
 

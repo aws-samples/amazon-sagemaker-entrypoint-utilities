@@ -36,6 +36,7 @@ def sm_protocol(
         model (str, optional): Model dir when not running on SageMaker. Defaults to "model".
         output (str, optional): Output dir when not running on SageMaker. Defaults to "output".
         channels (List[str], optional): Data channels. Defaults to ["train", "test", "validation"].
+        channel_prefix (str, optional): Parent directory that contains the channel dirs. Defaults to "data".
 
     Returns:
         argparse.ArgumentParser: argument parser with minimum SageMaker protocol.

@@ -7,11 +7,12 @@
 #
 # The 1st save may put smepu after tqdm (or tqdm-dependant modules), and it
 # takes the 2nd (or possibly more) save to rearrange smepu to the top.
+import smepu
+from smepu.click import sm_protocol
+
 from typing import Any, Dict
 
-import smepu
 from dummyest import DummyEstimator
-from smepu.click import sm_protocol
 
 # Setup logger must be done in the entrypoint script.
 logger = smepu.setup_opinionated_logger(__name__)

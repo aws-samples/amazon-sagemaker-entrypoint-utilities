@@ -4,7 +4,7 @@ import os
 import sys
 import warnings
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, Iterable, List, Tuple
 
 from ._gluonts_core_serde import decode
 
@@ -23,7 +23,7 @@ def sm_protocol(
     model: str = "model",
     output: str = "output",
     channels: List[str] = ["train", "test", "validation"],
-    mkdir_local: bool = True,
+    channel_prefix: str = "data",
 ) -> argparse.ArgumentParser:
     """Create an arg parser that implements minimum SageMaker entrypoint protocol.
 
@@ -41,19 +41,27 @@ def sm_protocol(
         argparse.ArgumentParser: argument parser with minimum SageMaker protocol.
     """
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model-dir", type=Path, default=os.environ.get("SM_MODEL_DIR", "model"))
-    parser.add_argument("--output-data-dir", type=Path, default=os.environ.get("SM_OUTPUT_DATA_DIR", "output"))
+    parser.add_argument(
+        "--model-dir", type=Path, help="Where to output model artifacts", default=os.environ.get("SM_MODEL_DIR", model),
+    )
+    parser.add_argument(
+        "--output-data-dir",
+        type=Path,
+        help="Where to output additional artifacts",
+        default=os.environ.get("SM_OUTPUT_DATA_DIR", output),
+    )
     for channel in channels:
         parser.add_argument(
             f"--{channel}",
             type=Path,
-            default=os.environ.get(f"SM_CHANNEL_{channel.upper()}", os.path.join("data", channel)),
+            help=f"Where to read input channel {channel}",
+            default=os.environ.get(f"SM_CHANNEL_{channel.upper()}", os.path.join(channel_prefix, channel)),
         )
 
     return parser
 
 
-def parse_for_func(cli_args: List[str]) -> Dict[str, Any]:
+def parse_for_func(cli_args: Iterable[str]) -> Dict[str, Any]:
     """Convert list of ['--name', 'value', ...] to {'name': val}, where 'val' will be in the nearest data type
     or a specific class as specified in the cli args.
 
@@ -117,7 +125,7 @@ ArgsDict = Dict[str, Any]
 IR = Dict[str, "ObjectIR"]
 
 
-def _round_1(cli_args: List[str]) -> ArgsDict:
+def _round_1(cli_args: Iterable[str]) -> ArgsDict:
     """Convert list of ['--name', 'value', ...] to {'name': val}, where 'val' will be in the nearest data type.
 
     Conversion follows the principle: "if it looks like a duck and quacks like a duck, then it must be a duck".

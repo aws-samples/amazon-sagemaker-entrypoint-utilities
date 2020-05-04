@@ -1,3 +1,4 @@
+import os
 import pathlib
 
 import pkg_resources
@@ -57,3 +58,12 @@ if is_on_sagemaker():
         tqdm.trange = no_trange
 
         print("SM_HOSTS: tqdm silenced.")
+
+    # Make spacy.convert & spacy.train output plain log.
+    print("Make plain wasabi.")
+    os.environ["ANSI_COLORS_DISABLE"] = "1"
+    os.environ["WASABI_NO_PRETTY"] = "1"
+    os.environ["WASABI_LOG_FRIENDLY"] = "1"
+    # Additional setting for spacy.train to make its log plain.
+    print("Make plain spacy train.")
+    os.environ["LOG_FRIENDLY"] = "1"

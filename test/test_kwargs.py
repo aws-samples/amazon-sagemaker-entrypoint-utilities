@@ -1,10 +1,7 @@
-import argparse
-import os
-from pathlib import Path
+"""Placeholder."""
+from smepu.argparse import sm_protocol, to_kwargs
 
 import pytest
-
-from smepu.argparse import parse_for_func, sm_protocol
 
 
 @pytest.mark.parametrize(
@@ -17,10 +14,11 @@ from smepu.argparse import parse_for_func, sm_protocol
     ],
 )
 def test_good(test_input, expected):
+    """Put a placeholder."""
     parser = sm_protocol()
     args, train_args = parser.parse_known_args(test_input)
 
-    hyperopts = parse_for_func(train_args)
+    hyperopts = to_kwargs(train_args)
     result = actual_train(args.model_dir, args.train, **hyperopts)
 
     assert result == expected
@@ -37,17 +35,19 @@ def test_good(test_input, expected):
     ],
 )
 def test_bad(test_input, expected):
+    """Put a placeholder."""
     parser = sm_protocol()
     args, train_args = parser.parse_known_args(test_input)
 
     args, train_args = parser.parse_known_args(test_input)
-    hyperopts = parse_for_func(train_args)
+    hyperopts = to_kwargs(train_args)
     result = actual_train(args.model_dir, args.train, **hyperopts)
 
     assert result == expected
 
 
 def actual_train(model_dir, train_dir, epochs=100, init="uniform", dict_arg=None):
+    """Put a placeholder."""
     return {
         "model_dir": model_dir.as_posix(),
         "train_dir": train_dir.as_posix(),

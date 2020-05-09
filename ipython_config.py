@@ -1,3 +1,4 @@
+"""Placeholder."""
 import os
 import subprocess
 from pathlib import Path
@@ -8,6 +9,7 @@ from typing import Union
 
 
 def sys_path_append(o: Union[str, os.PathLike]) -> str:
+    """Put a placeholder."""
     posix_path: str = o.as_posix() if isinstance(o, Path) else Path(o).as_posix()
     return 'sys.path.append("{}")'.format(posix_path)
 

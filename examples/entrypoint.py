@@ -19,12 +19,11 @@ logger = smepu.setup_opinionated_logger(__name__)
 
 def main(cfg: Dict[str, Any], train_args: List[str]) -> None:
     """Run the main function of this script."""
-    logger.info("Entrypoint script that uses argparse to digest hyperparameters.")
     logger.info("cfg: %s", cfg)
     logger.info("train_args: %s", train_args)
 
     # Convert cli args / hyperparameters to kwargs
-    kwargs: Dict[str, Any] = smepu.argparse.kwargs(train_args)
+    kwargs: Dict[str, Any] = smepu.argparse.to_kwargs(train_args)
 
     # Estimator is an instance of "algo" class.
     klass: Any = locate(cfg["algo"])
@@ -36,6 +35,8 @@ def main(cfg: Dict[str, Any], train_args: List[str]) -> None:
 
 
 if __name__ == "__main__":
+    logger.info("Entrypoint script that uses argparse to digest hyperparameters.")
+
     # Minimal arg parsers for SageMaker protocol.
     parser = smepu.argparse.sm_protocol()
     parser.add_argument(

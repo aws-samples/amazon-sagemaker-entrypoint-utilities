@@ -34,12 +34,11 @@ def main(train_args: Tuple[str, ...], **my_kwargs) -> None:
         train_args ([type]): [description]
         my_kwargs: arguments to this entrypoint script, parsed by click.
     """
-    logger.info("Entrypoint script that uses click to digest hyperparameters.")
     logger.info("SageMaker matters: %s", my_kwargs)
     logger.info("train_args: %s", train_args)
 
     # Convert cli args / hyperparameters to the estimator's kwargs
-    kwargs: Dict[str, Any] = smepu.argparse.kwargs(train_args)
+    kwargs: Dict[str, Any] = smepu.argparse.to_kwargs(train_args)
     logger.info("kwargs: %s", kwargs)
 
     # Estimator is an instance of "algo" class.
@@ -52,4 +51,5 @@ def main(train_args: Tuple[str, ...], **my_kwargs) -> None:
 
 
 if __name__ == "__main__":
+    logger.info("Entrypoint script that uses click to digest hyperparameters.")
     main()

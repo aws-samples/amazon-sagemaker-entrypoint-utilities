@@ -39,7 +39,6 @@ def decode(r: Any) -> Any:
     encode
         Inverse function.
     """
-
     # structural recursion over the possible shapes of r
     # r = { 'class': ..., 'args': ... }
     # r = { 'class': ..., 'kwargs': ... }

@@ -63,7 +63,7 @@ def sm_protocol(
     return parser
 
 
-def kwargs(cli_args: Iterable[str]) -> Dict[str, Any]:
+def to_kwargs(cli_args: Iterable[str]) -> Dict[str, Any]:
     """Convert list of ['--name', 'value', ...] to {'name': val} that represents **kwargs of a callable.
 
     The ``value`` string will be converted to ``val`` which is either the nearest data type or a specific class as
@@ -78,7 +78,7 @@ def kwargs(cli_args: Iterable[str]) -> Dict[str, Any]:
     return args_round_2
 
 
-def sys_argv(cli_args: List[str]) -> List[Any]:
+def to_sys_argv(cli_args: List[str]) -> List[Any]:
     """Put a placeholder."""
     # TODO: This function converts a SageMaker-compatible CLI args to structure that the underlying function expect.
     # Intended use-case: when wrapping another function that directly access sys.argv.
@@ -90,7 +90,7 @@ def patch_sys_argv(cli_args: List[str]) -> List[Any]:
     """Put a placeholder."""
     # TODO: replace sys.argv with whatever returned by parse_hp_for_argv. Return the original sys.argv.
     ori_sys_argv = sys.argv
-    sys.argv = [sys.argv[0], *sys_argv(cli_args)]
+    sys.argv = [sys.argv[0], *to_sys_argv(cli_args)]
     return ori_sys_argv
 
 

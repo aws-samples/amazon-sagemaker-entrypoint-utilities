@@ -1,3 +1,4 @@
+"""Placeholder."""
 import logging
 from time import sleep
 from typing import Any, List
@@ -23,9 +24,11 @@ class DummyEstimator(object):
         self.callbacks = callbacks
 
     def __str__(self) -> str:
+        """Return string representation."""
         return f'{self.__class__.__name__}(epochs={self.epochs}, init="{self.init}", callbacks={self.callbacks})'
 
     def fit(self, *args, **kwargs) -> None:
+        """Fit this estimator."""
         for epoch in range(1, 1 + self.epochs):
             for i in tqdm(range(3)):
                 sleep(1.0)
@@ -33,11 +36,16 @@ class DummyEstimator(object):
 
 
 class DummyCallback(object):
+    """A dummy callback."""
+
     def __init__(self, name: str):
+        """Initialize a ``DummyCallback`` instance."""
         self.name = name
 
     def __str__(self):
+        """Return string representation."""
         return f'{self.__class__.__name__}(name="{self.name}")'
 
     def __repr__(self):
+        """Return string representation."""
         return self.__str__()

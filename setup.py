@@ -1,3 +1,4 @@
+"""Placeholder."""
 import os
 from typing import List
 
@@ -7,10 +8,12 @@ _pkg: str = "smepu"
 
 
 def read(fname):
+    """Put a placeholder."""
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 
 def read_version():
+    """Put a placeholder."""
     return read("VERSION").strip()
 
 
@@ -22,7 +25,6 @@ required_packages: List[str] = []
 extras = {
     "all": ["click"],
     "click": ["click"],
-    "examples": ["click", "tqdm"]
 }
 # fmt: on
 

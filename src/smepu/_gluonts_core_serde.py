@@ -13,7 +13,7 @@
 # on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
 # express or implied. See the License for the specific language governing
 # permissions and limitations under the License.
-
+"""Placeholder."""
 from pydoc import locate
 from typing import Any
 
@@ -22,8 +22,7 @@ kind_inst = "instance"
 
 
 def decode(r: Any) -> Any:
-    """
-    Decodes a value from an intermediate representation `r`.
+    """Decode a value from an intermediate representation `r`.
 
     Parameters
     ----------

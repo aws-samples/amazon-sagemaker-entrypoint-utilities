@@ -1,3 +1,4 @@
+"""Placeholder."""
 import logging
 import os
 import sys
@@ -11,13 +12,14 @@ def is_on_sagemaker() -> bool:
 
 
 def mkdir(path: Path, parents=True, exist_ok=True, **kwargs) -> Path:
+    """Create a directory."""
     path = pathify(path)
     path.mkdir(parents=parents, exist_ok=exist_ok, **kwargs)
     return path
 
 
 def setup_opinionated_logger(name: str, level: int = logging.INFO):
-    """Setup a very opinionated logger that works on and outside SageMaker.
+    """Configure a very opinionated logger that works on and outside SageMaker.
 
     On SageMaker (particularly training), root logger may have no handler despite basicConfig(...). Hence, force add
     stdout handler to let all log messages end up at CloudWatch.
@@ -61,6 +63,7 @@ def setup_opinionated_logger(name: str, level: int = logging.INFO):
 
 
 def pathify(path: Union[str, Path, os.PathLike]) -> Path:
+    """Convert path-like argument to ``pathlib.Path``."""
     if isinstance(path, Path):
         return path
     else:
@@ -68,6 +71,7 @@ def pathify(path: Union[str, Path, os.PathLike]) -> Path:
 
 
 def logger_has_stdeo(logger: logging.Logger) -> bool:
+    """Check whether logger has stdout or stderr in its handlers."""
     for handler in logger.handlers:
         if handler.stream in (sys.stdout, sys.stderr):  # type: ignore
             return True

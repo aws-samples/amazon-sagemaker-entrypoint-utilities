@@ -1,3 +1,4 @@
+"""Placeholder."""
 # Make sure to import smepu before you import tqdm or any other module that
 # uses tqdm.
 #
@@ -9,23 +10,25 @@
 # takes the 2nd (or possibly more) save to rearrange smepu to the top.
 import smepu
 
+from pydoc import locate
 from typing import Any, Dict, List
-
-from dummyest import DummyEstimator
 
 # Setup logger must be done in the entrypoint script.
 logger = smepu.setup_opinionated_logger(__name__)
 
 
 def main(cfg: Dict[str, Any], train_args: List[str]) -> None:
+    """Run the main function of this script."""
+    logger.info("Entrypoint script that uses argparse to digest hyperparameters.")
     logger.info("cfg: %s", cfg)
     logger.info("train_args: %s", train_args)
 
     # Convert cli args / hyperparameters to kwargs
-    kwargs: Dict[str, Any] = smepu.argparse.parse_for_func(train_args)
+    kwargs: Dict[str, Any] = smepu.argparse.kwargs(train_args)
 
-    # Invoke a callable using the kwargs.
-    estimator = DummyEstimator(**kwargs)
+    # Estimator is an instance of "algo" class.
+    klass: Any = locate(cfg["algo"])
+    estimator = klass(**kwargs)
     logger.info("%s", estimator)
 
     # Start training, which will show tqdm bar.
@@ -35,6 +38,9 @@ def main(cfg: Dict[str, Any], train_args: List[str]) -> None:
 if __name__ == "__main__":
     # Minimal arg parsers for SageMaker protocol.
     parser = smepu.argparse.sm_protocol()
+    parser.add_argument(
+        "--algo", type=str, help="Full name of estimator class that provides .fit()", default="dummyest.DummyEstimator"
+    )
     args, train_args = parser.parse_known_args()
 
     # Demonstrate SageMaker checks.

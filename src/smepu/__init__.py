@@ -1,3 +1,4 @@
+"""Placeholder."""
 import os
 import pathlib
 
@@ -42,14 +43,17 @@ if is_on_sagemaker():
         old_trange = tqdm.trange
 
         def no_auto(*a, **k):
+            """Put a place holder."""
             k["disable"] = True
             return old_auto(*a, **k)
 
         def nop_tqdm(*a, **k):
+            """Put a place holder."""
             k["disable"] = True
             return old_tqdm(*a, **k)
 
         def no_trange(*a, **k):
+            """Put a place holder."""
             k["disable"] = True
             return old_trange(*a, **k)
 

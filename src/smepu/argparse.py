@@ -1,3 +1,4 @@
+"""Placeholder."""
 import argparse
 import json
 import os
@@ -10,12 +11,12 @@ from ._gluonts_core_serde import decode
 
 
 def _list(*args):
-    """Wrapper to Python list, to be used by cli args."""
+    """Provide a wrapper to Python list, to be used by cli args."""
     return list(args)
 
 
 def _set(*args):
-    """Wrapper to Python set, to be used by cli args."""
+    """Provide a wrapper to Python set, to be used by cli args."""
     return set(args)
 
 
@@ -62,12 +63,14 @@ def sm_protocol(
     return parser
 
 
-def parse_for_func(cli_args: Iterable[str]) -> Dict[str, Any]:
-    """Convert list of ['--name', 'value', ...] to {'name': val}, where 'val' will be in the nearest data type
-    or a specific class as specified in the cli args.
+def kwargs(cli_args: Iterable[str]) -> Dict[str, Any]:
+    """Convert list of ['--name', 'value', ...] to {'name': val} that represents **kwargs of a callable.
 
-    For the nearest types, conversion follows the principle: "if it looks like a duck and quacks like a duck,
-    then it must be a duck".
+    The ``value`` string will be converted to ``val`` which is either the nearest data type or a specific class as
+    specified in the cli args.
+
+    For the nearest types, conversion follows the principle: "if it looks like a duck and quacks like a duck, then it
+    must be a duck".
     """
     # TODO: with eval() and/or exec(), the cli args can be made shorter. Is this a good idea?
     args_round_1 = _round_1(cli_args)
@@ -75,7 +78,8 @@ def parse_for_func(cli_args: Iterable[str]) -> Dict[str, Any]:
     return args_round_2
 
 
-def parse_for_argv(cli_args: List[str]) -> List[Any]:
+def sys_argv(cli_args: List[str]) -> List[Any]:
+    """Put a placeholder."""
     # TODO: This function converts a SageMaker-compatible CLI args to structure that the underlying function expect.
     # Intended use-case: when wrapping another function that directly access sys.argv.
     # Returns a new sys.argv-like data structure, i.e., ['--param1', 'value1', '--].
@@ -83,9 +87,10 @@ def parse_for_argv(cli_args: List[str]) -> List[Any]:
 
 
 def patch_sys_argv(cli_args: List[str]) -> List[Any]:
+    """Put a placeholder."""
     # TODO: replace sys.argv with whatever returned by parse_hp_for_argv. Return the original sys.argv.
     ori_sys_argv = sys.argv
-    sys.argv = [sys.argv[0], *parse_for_argv(cli_args)]
+    sys.argv = [sys.argv[0], *sys_argv(cli_args)]
     return ori_sys_argv
 
 
@@ -203,8 +208,11 @@ def _round_2(d: ArgsDict) -> ArgsDict:
 
 
 class ObjectIR(object):
+    """Intermediate representation of an instance of a custom class."""
+
     @staticmethod
     def split(d: ArgsDict) -> Tuple[ArgsDict, ArgsDict]:
+        """Split arguments into as-is vs lowered."""
         klasses, rest = {}, {}
         for k, v in d.items():
             if k.endswith("__class__"):
@@ -227,7 +235,7 @@ class ObjectIR(object):
 
     @staticmethod
     def is_kwarg(s: str) -> bool:
-        # Is this a positional argument or keyword argument?
+        """Check whether this is a positional argument or keyword argument."""
         try:
             # Python doesn't optimize away (i.e., remove) next statement,
             # unlike some compilers; or else, fun puzzling time ahead.
@@ -241,9 +249,25 @@ class ObjectIR(object):
         """Reduced ObjectIR to just the top-level ones."""
         # After lower, we end up with this:
         #
-        # callbacks: {'__kind__': 'instance', 'class': 'list', 'args': [], 'kwargs': {}}
-        # callbacks.0: {'__kind__': 'instance', 'class': 'dummyest.DummyCallback', 'args': [], 'kwargs': {'name': 'EarlyStopper'}}
-        # callbacks.1: {'__kind__': 'instance', 'class': 'dummyest.DummyCallback', 'args': ['Checkpointer'], 'kwargs': {}}
+        # callbacks: {
+        #   '__kind__': 'instance',
+        #   'class': 'smepu.list',
+        #   'args': [],
+        #   'kwargs': {}}
+        #
+        # callbacks.0: {
+        #   '__kind__': 'instance',
+        #   'class': 'dummyest.DummyCallback',
+        #   'args': [],
+        #   'kwargs': {'name': 'EarlyStopper'}
+        # }
+        #
+        # callbacks.1: {
+        #   '__kind__': 'instance',
+        #   'class': 'dummyest.DummyCallback',
+        #   'args': ['Checkpointer'],
+        #   'kwargs': {}
+        # }
         #
         # So, another step needed to properly assign each ObjectIR as pos- or kw-args of another ObjectIR.
         for k, v in klasses.items():
@@ -261,6 +285,11 @@ class ObjectIR(object):
         return {k: v for k, v in klasses.items() if "." not in k}
 
     def __init__(self, klass: str) -> None:
+        """Initialize an instance of ``ObjectIR``.
+
+        Args:
+            klass (str): Full class name.
+        """
         self.klass = klass
         self.args_d: ArgsDict = {}  # Use dict as #args unknown & may be out-of-order.
         self.kwargs: ArgsDict = {}

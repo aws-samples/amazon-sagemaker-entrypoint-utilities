@@ -17,6 +17,15 @@ def read_version():
 # Declare minimal set for installation
 required_packages: List[str] = []
 
+# Specific use case dependencies
+# fmt: off
+extras = {
+    "all": ["click"],
+    "click": ["click"],
+    "examples": ["click", "tqdm"]
+}
+# fmt: on
+
 setup(
     name=_pkg,
     packages=find_packages(),
@@ -28,12 +37,12 @@ setup(
     url=f"https://github.com/abcd/{_pkg}/",
     download_url="",
     project_urls={
-        "Bug Tracker": f"https://github.com/abcd/{_pkg}/issues/",
+        "Bug Tracker": f"https://github.com/verdimrc/{_pkg}/issues/",
         "Documentation": f"https://{_pkg}.readthedocs.io/en/stable/",
-        "Source Code": f"https://github.com/abcd/{_pkg}/",
+        "Source Code": f"https://github.com/verdimrc/{_pkg}/",
     },
     license="MIT",
-    keywords="Amazon SageMaker entrypoint hyperparameters",
+    keywords="Amazon SageMaker train entrypoint",
     platforms=["any"],
     classifiers=[
         "Development Status :: 3 - Alpha",
@@ -48,4 +57,6 @@ setup(
     ],
     python_requires=">=3.6.0",
     install_requires=required_packages,
+    extras_require=extras,
+    include_package_data=True,
 )

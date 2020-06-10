@@ -8,7 +8,6 @@ _pkg: str = "smepu"
 
 
 def read(fname):
-    """Put a placeholder."""
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 
@@ -30,7 +29,8 @@ extras = {
 
 setup(
     name=_pkg,
-    packages=find_packages(),
+    packages=find_packages(where="src"),
+    package_dir={"": "src"},
     version=read_version(),
     description="Utilities for Amazon SageMaker's entrypoint script.",
     long_description=read("README.md"),

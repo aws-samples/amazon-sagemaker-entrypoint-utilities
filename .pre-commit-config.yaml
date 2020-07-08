@@ -21,7 +21,7 @@ repos:
   - id: autoflake
     args: [--ignore-init-module-imports, --in-place]
 - repo: https://github.com/timothycrosley/isort
-  rev: 4.3.21
+  rev: 5.0.5
   hooks:
   - id: isort
 - repo: https://github.com/psf/black

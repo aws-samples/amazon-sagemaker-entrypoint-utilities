@@ -4,6 +4,7 @@ flake8
 pydocstyle
 pytest
 mypy
-isort
+isort>=5
 rope
 tox
+pre-commit

@@ -8,3 +8,4 @@ isort>=5
 rope
 tox
 pre-commit
+setupext-janitor

@@ -1,1 +1,2 @@
-include VERSION
+include versioneer.py
+include src/smepu/_version.py

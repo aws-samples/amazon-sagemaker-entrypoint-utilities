@@ -5,20 +5,13 @@ import pathlib
 import pkg_resources
 
 from . import argparse  # noqa
+from ._version import get_versions
 from .argparse import _list as list  # noqa
 from .argparse import _set as set  # noqa
 from .core import is_on_sagemaker, mkdir, pathify, setup_opinionated_logger  # noqa
 
-_pkg_dir: pathlib.Path = pathlib.Path(__file__).resolve().parent
-
-try:
-    # Loading installed module, so read the installed version
-    __version__ = pkg_resources.require(_pkg_dir.name)[0].version
-except pkg_resources.DistributionNotFound:
-    # Loading uninstalled module, so try to read version from ../../VERSION.
-    with open(_pkg_dir / ".." / ".." / "VERSION", "r") as f:
-        __version__ = f.readline().strip()
-
+__version__ = get_versions()["version"]
+del get_versions
 
 # To disable tqdm when running on SageMaker, this module MUST be imported before
 # any other module that uses tqdm.

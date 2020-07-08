@@ -19,3 +19,5 @@
 *.tar.gz binary
 *.pickle binary
 *.zip binary
+
+src/smepu/_version.py export-subst

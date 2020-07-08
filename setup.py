@@ -4,16 +4,13 @@ from typing import List
 
 from setuptools import find_packages, setup
 
+import versioneer
+
 _pkg: str = "smepu"
 
 
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
-
-
-def read_version():
-    """Put a placeholder."""
-    return read("VERSION").strip()
 
 
 # Declare minimal set for installation
@@ -31,7 +28,8 @@ setup(
     name=_pkg,
     packages=find_packages(where="src"),
     package_dir={"": "src"},
-    version=read_version(),
+    version=versioneer.get_version(),
+    cmdclass=versioneer.get_cmdclass(),
     description="Utilities for Amazon SageMaker's entrypoint script.",
     long_description=read("README.md"),
     author="Verdi March",

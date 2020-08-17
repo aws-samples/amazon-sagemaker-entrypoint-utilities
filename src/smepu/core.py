@@ -73,6 +73,6 @@ def pathify(path: Union[str, Path, os.PathLike]) -> Path:
 def logger_has_stdeo(logger: logging.Logger) -> bool:
     """Check whether logger has stdout or stderr in its handlers."""
     for handler in logger.handlers:
-        if handler.stream in (sys.stdout, sys.stderr):  # type: ignore
+        if hasattr(handler, "stream") and handler.stream in (sys.stdout, sys.stderr):  # type: ignore
             return True
     return False

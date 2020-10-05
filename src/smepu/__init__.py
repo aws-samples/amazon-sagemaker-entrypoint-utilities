@@ -1,8 +1,5 @@
 """Placeholder."""
 import os
-import pathlib
-
-import pkg_resources
 
 from . import argparse  # noqa
 from ._version import get_versions

@@ -17,12 +17,10 @@ def read(fname):
 required_packages: List[str] = []
 
 # Specific use case dependencies
-# fmt: off
 extras = {
     "all": ["click"],
     "click": ["click"],
 }
-# fmt: on
 
 setup(
     name=_pkg,
@@ -30,16 +28,15 @@ setup(
     package_dir={"": "src"},
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
-    description="Utilities for Amazon SageMaker's entrypoint script.",
+    description="Utilities for Amazon SageMaker's training entrypoint script.",
     long_description=read("README.md"),
     author="Verdi March",
-    author_email="first.last@email.com",
-    url=f"https://github.com/abcd/{_pkg}/",
+    # author_email="first.last@email.com",
+    url=f"https://github.com/aws-samples/amazon-sagemaker-entrypoint-utilities/",
     download_url="",
     project_urls={
-        "Bug Tracker": f"https://github.com/verdimrc/{_pkg}/issues/",
-        "Documentation": f"https://{_pkg}.readthedocs.io/en/stable/",
-        "Source Code": f"https://github.com/verdimrc/{_pkg}/",
+        "Bug Tracker": f"https://github.com/aws-samples/amazon-sagemaker-entrypoint-utilities/issues/",
+        "Source Code": f"https://github.com/aws-samples/amazon-sagemaker-entrypoint-utilities/",
     },
     license="MIT",
     keywords="Amazon SageMaker train entrypoint",

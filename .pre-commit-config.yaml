@@ -1,6 +1,6 @@
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v3.1.0
+  rev: v3.2.0
   hooks:
   - id: check-json
   - id: check-merge-conflict
@@ -13,19 +13,16 @@ repos:
   - id: detect-private-key
   - id: end-of-file-fixer
   - id: trailing-whitespace
-# Disable until a new release with pre-commit hook
-#- repo: https://github.com/myint/autoflake
-#  rev: master
-- repo: https://github.com/dycw/mirrors-autoflake
-  rev: master
+- repo: https://github.com/myint/autoflake
+  rev: v1.4
   hooks:
   - id: autoflake
     args: [--ignore-init-module-imports, --in-place]
 - repo: https://github.com/timothycrosley/isort
-  rev: 5.0.5
+  rev: 5.5.4
   hooks:
   - id: isort
 - repo: https://github.com/psf/black
-  rev: 19.10b0
+  rev: 20.8b1
   hooks:
   - id: black

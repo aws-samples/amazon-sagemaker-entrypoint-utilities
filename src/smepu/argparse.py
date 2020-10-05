@@ -1,3 +1,6 @@
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# SPDX-License-Identifier: MIT-0
+
 """Placeholder."""
 import argparse
 import json
@@ -44,7 +47,10 @@ def sm_protocol(
     """
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--model-dir", type=Path, help="Where to output model artifacts", default=os.environ.get("SM_MODEL_DIR", model),
+        "--model-dir",
+        type=Path,
+        help="Where to output model artifacts",
+        default=os.environ.get("SM_MODEL_DIR", model),
     )
     parser.add_argument(
         "--output-data-dir",

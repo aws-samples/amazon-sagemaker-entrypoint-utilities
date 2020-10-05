@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# SPDX-License-Identifier: MIT-0
+
 # Utility function to get script's directory (deal with Mac OSX quirkiness).
 get_bin_dir() {
     local READLINK=readlink

@@ -1,3 +1,6 @@
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# SPDX-License-Identifier: MIT-0
+
 """Placeholder."""
 import logging
 import os
@@ -33,7 +36,9 @@ def setup_opinionated_logger(name: str, level: int = logging.INFO):
     fmt = "%(asctime)s [%(levelname)s] %(name)s %(message)s"
     datefmt = "[%Y-%m-%d %H:%M:%S]"
     logging.basicConfig(
-        level=level, format=fmt, datefmt=datefmt,
+        level=level,
+        format=fmt,
+        datefmt=datefmt,
     )
 
     if not logger_has_stdeo(logging.root):

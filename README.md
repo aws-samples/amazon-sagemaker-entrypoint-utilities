@@ -92,7 +92,7 @@ examples/entrypoint.sh
 SM_HOSTS=abcd examples/entrypoint.sh
 
 # Run click-version of entrypoint
-examples/entrypoint.sh click
+examples/entrypoint.sh -click
 ```
 
 To experiment with different hyperparameters, see `DummyEstimator` in

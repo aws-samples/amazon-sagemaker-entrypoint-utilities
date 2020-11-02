@@ -24,6 +24,8 @@ Main features:
 2. Passthrough CLI-args to a wrapped estimator, so the entrypoint autors do not
 have to write the boiler-plate codes that *"parses those 10+ CLI args, and calls
 another estimator with those args."*
+   * Implementation note: this is made possible thanks to the
+     `gluonts.core.serde.decode()` function.
 
 3. Automatically disable fancy outputs when running as Amazon SageMaker training
 jobs.

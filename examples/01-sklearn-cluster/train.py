@@ -81,7 +81,7 @@ class Output:
         if metadata:
             header = pd.DataFrame(metadata)
             df = pd.concat([header, df], axis=1)
-        df.to_csv("cluster.csv", index=False, header=True)
+        df.to_csv(self.output_data_dir / "cluster.csv", index=False, header=True)
 
 
 class MultiOutput(Output):

@@ -63,7 +63,9 @@ class Output:
         fname = "labels.csv" if metadata is None else f"labels-{metadata}.csv"
         labels.to_csv(self.output_data_dir / fname, index=False)
 
-    def save_metrics(self, metrics: List[Dict[str, Any]], metadata: Optional[Dict[str, List[Any]]] = None) -> None:
+    def save_metrics(
+        self, metrics: Sequence[Mapping[str, Any]], metadata: Optional[Mapping[str, Sequence[Any]]] = None
+    ) -> None:
         """Save cluster metrics to `cluster.csv`, prepended by metadata columns.
 
         Args:
@@ -71,9 +73,6 @@ class Output:
             metadata (Optional[Dict[str, List[Any]]]): Metadata columns of each metric set, where
                 `len(metadata) == len(metrics)`. Default to None.
         """
-        # import ipdb
-
-        # ipdb.set_trace()
         df = pd.DataFrame(metrics)
         if metadata:
             header = pd.DataFrame(metadata)
@@ -164,28 +163,25 @@ def main2(
 
     # Load, fit_predict, save.
     df = load_data(train_channel)
+
+    # Figure-out what trials to carry out.
     if not sweep:
-        estimator, labels, metrics = fit_predict(df, est_klass, est_kwargs)
-        writer.save_model(estimator)
-        writer.save_labels(labels)
-        writer.save_metrics([metrics])
+        trial: List[Optional[int]] = [None]  # Type annotate to keep mypy happy
+        metric_metadata: Optional[Dict[str, Any]] = None
     else:
         if not (0 < sweep_start <= sweep_end):
             raise ValueError(f"Invalid sweep range: {[sweep_start, sweep_end]}")
 
-        metric_set = []
-        for n_clusters in range(sweep_start, sweep_end + 1):
-            estimator, labels, metrics = fit_predict(
-                df,
-                est_klass,
-                est_kwargs,
-                override_n_clusters=n_clusters,
-            )
-            # Metadata `n_clusters` for model's filename and output df's content.
-            writer.save_model(estimator, n_clusters)
-            writer.save_labels(labels, n_clusters)
-            metric_set.append(metrics)
-        writer.save_metrics(metric_set, {"n_clusters": list(range(sweep_start, sweep_end + 1))})
+        trial = [i for i in range(sweep_start, sweep_end + 1)]
+        metric_metadata = {"n_clusters": trial}
+
+    metric_set = []
+    for n_clusters in trial:
+        estimator, labels, metrics = fit_predict(df, est_klass, est_kwargs, n_clusters)
+        writer.save_model(estimator, n_clusters)
+        writer.save_labels(labels, n_clusters)
+        metric_set.append(metrics)
+    writer.save_metrics(metric_set, metric_metadata)
 
 
 def load_data(path: Path) -> pd.DataFrame:
@@ -285,8 +281,9 @@ def create_estimator(
 ) -> ClusterMixin:
     """Instantiate `clsname` initialized with`hyperparams` cli args.
 
-    When `override_n_clusters` is an int, force `n_clusters` to this int. This raises an exception
-    if estimator's `__init__()` does not accept `n_clusters`.
+    When `override_n_clusters` is an int, force `n_clusters` or `n_components` to this int.
+    This raises an exception if estimator's `__init__()` does not accept `n_clusters` or
+    `n_components`.
 
     Args:
         clsname (str): estimator's class name.

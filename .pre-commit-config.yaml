@@ -1,6 +1,6 @@
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v3.2.0
+  rev: v3.4.0
   hooks:
   - id: check-json
   - id: check-merge-conflict
@@ -19,7 +19,7 @@ repos:
   - id: autoflake
     args: [--ignore-init-module-imports, --in-place]
 - repo: https://github.com/timothycrosley/isort
-  rev: 5.5.4
+  rev: 5.7.0
   hooks:
   - id: isort
 - repo: https://github.com/psf/black

@@ -70,7 +70,7 @@ class Output:
     def save_metrics(
         self, metrics: Sequence[Mapping[str, Any]], metadata: Optional[Mapping[str, Sequence[Any]]] = None
     ) -> None:
-        """Save cluster metrics to `cluster.csv`, prepended by metadata columns.
+        """Save cluster metrics to `metrics.csv`, prepended by metadata columns.
 
         Args:
             metrics (List[Dict[str, Any]]): List of metric sets, where each metric set is {'name': value}.
@@ -81,7 +81,7 @@ class Output:
         if metadata:
             header = pd.DataFrame(metadata)
             df = pd.concat([header, df], axis=1)
-        df.to_csv(self.output_data_dir / "cluster.csv", index=False, header=True)
+        df.to_csv(self.output_data_dir / "metrics.csv", index=False, header=True)
 
 
 class MultiOutput(Output):

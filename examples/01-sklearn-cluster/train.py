@@ -10,6 +10,7 @@
 # takes the 2nd (or possibly more) save to rearrange smepu to the top.
 import smepu
 
+import inspect
 from pathlib import Path
 from pydoc import locate
 from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple, Type, cast
@@ -166,17 +167,17 @@ def main2(
 
     # Figure-out what trials to carry out.
     if not sweep:
-        trial: List[Optional[int]] = [None]  # Type annotate to keep mypy happy
+        trials: List[Optional[int]] = [None]  # Type annotate to keep mypy happy
         metric_metadata: Optional[Dict[str, Any]] = None
     else:
         if not (0 < sweep_start <= sweep_end):
             raise ValueError(f"Invalid sweep range: {[sweep_start, sweep_end]}")
 
-        trial = [i for i in range(sweep_start, sweep_end + 1)]
-        metric_metadata = {"n_clusters": trial}
+        trials = [i for i in range(sweep_start, sweep_end + 1)]
+        metric_metadata = {"n_clusters": trials}
 
     metric_set = []
-    for n_clusters in trial:
+    for n_clusters in trials:
         estimator, labels, metrics = fit_predict(df, est_klass, est_kwargs, n_clusters)
         writer.save_model(estimator, n_clusters)
         writer.save_labels(labels, n_clusters)
@@ -242,7 +243,6 @@ def fit_predict(
         "aic": try_metric(estimator, X, "aic"),
         "bic": try_metric(estimator, X, "bic"),
     }
-
     return (
         estimator,
         dfify_clusters({"cluster_id": labels, "silhouette": silhouette_samples(X, labels)}, df),
@@ -294,7 +294,7 @@ def create_estimator(
         ClusterMixin: clustering estimator.
     """
     if override_n_clusters is not None:
-        est_kwargs["n_clusters"] = override_n_clusters
+        est_kwargs[get_ncluster_kwarg(klass)] = override_n_clusters
     estimator = klass(**est_kwargs)
     return estimator
 
@@ -312,6 +312,24 @@ def dfify_clusters(cols: Dict[str, np.ndarray], df: pd.DataFrame) -> pd.DataFram
     sers = [pd.Series(a, name=c) for c, a in cols.items()]
     retval = pd.concat([*sers, df], axis=1)
     return retval
+
+
+def get_ncluster_kwarg(cls: Type) -> str:
+    """Get the kwarg of `cls.__init__()` that corresponds to the number of clusters.
+
+    Args:
+        cls (Type): Estimator class.
+
+    Returns:
+        str: "n_clusters", "n_components" (for GMM), or "".
+    """
+    kwargs = inspect.signature(cls).parameters
+    if "n_clusters" in kwargs:
+        return "n_clusters"
+    elif "n_components" in kwargs:
+        return "n_components"
+    else:
+        return ""
 
 
 def add_argument(parser):

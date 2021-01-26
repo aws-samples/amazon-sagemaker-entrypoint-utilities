@@ -10,15 +10,15 @@
 # takes the 2nd (or possibly more) save to rearrange smepu to the top.
 import smepu
 
-from abc import abstractmethod
 from pathlib import Path
 from pydoc import locate
-from typing import Any, Dict, Mapping, Optional, Sequence, Tuple, Type, cast
+from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple, Type, cast
 
 import joblib
 import numpy as np
 import pandas as pd
 from sklearn.base import ClusterMixin
+from sklearn.metrics import calinski_harabasz_score, davies_bouldin_score, silhouette_samples, silhouette_score
 
 # Setup logger must be done in the entrypoint script.
 logger = smepu.setup_opinionated_logger(__name__)
@@ -51,18 +51,34 @@ class Output:
         fname = "model.joblib" if metadata is None else f"model-{metadata}.joblib"
         joblib.dump(estimator, self.model_dir / fname)
 
-    @abstractmethod
-    def save_clustered(self, clustered: pd.DataFrame, metadata: Optional[Any] = None) -> None:
-        """Save clustered data to `clustered.csv`, or `clustered-{metadata}.csv` if metadata is not
+    def save_labels(self, labels: pd.DataFrame, metadata: Optional[Any] = None) -> None:
+        """Save cluster labels to `labels.csv`, or `labels-{metadata}.csv` if metadata is not
         None.
 
         Args:
-            clustered (pd.DataFrame): dataframe to save.
-            metadata (Any, optional): If not None, output filename is `clustered-{metadata}.csv.
+            labels (pd.DataFrame): dataframe to save.
+            metadata (Any, optional): If not None, output filename is `labels-{metadata}.csv.
                 Defaults to None.
         """
-        fname = "clustered.csv" if metadata is None else f"clustered-{metadata}.csv"
-        clustered.to_csv(self.output_data_dir / fname, index=False)
+        fname = "labels.csv" if metadata is None else f"labels-{metadata}.csv"
+        labels.to_csv(self.output_data_dir / fname, index=False)
+
+    def save_metrics(self, metrics: List[Dict[str, Any]], metadata: Optional[Dict[str, List[Any]]] = None) -> None:
+        """Save cluster metrics to `cluster.csv`, prepended by metadata columns.
+
+        Args:
+            metrics (List[Dict[str, Any]]): List of metric sets, where each metric set is {'name': value}.
+            metadata (Optional[Dict[str, List[Any]]]): Metadata columns of each metric set, where
+                `len(metadata) == len(metrics)`. Default to None.
+        """
+        # import ipdb
+
+        # ipdb.set_trace()
+        df = pd.DataFrame(metrics)
+        if metadata:
+            header = pd.DataFrame(metadata)
+            df = pd.concat([header, df], axis=1)
+        df.to_csv("cluster.csv", index=False, header=True)
 
 
 class MultiOutput(Output):
@@ -73,7 +89,7 @@ class MultiOutput(Output):
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self.opath = self.output_data_dir / "clustered.csv"
+        self.opath = self.output_data_dir / "labels.csv"
         self.header = True
 
     def save_model(self, estimator: Any, metadata: Any) -> None:  # type: ignore
@@ -86,15 +102,15 @@ class MultiOutput(Output):
         """
         super().save_model(estimator, metadata)
 
-    def save_clustered(self, clustered: pd.DataFrame, metadata: Any) -> None:  # type: ignore
-        """Add column `n_clusters=metadata` to the dataframe, then append to file `clustered.csv`.
+    def save_labels(self, labels: pd.DataFrame, metadata: Any) -> None:  # type: ignore
+        """Add column `n_clusters=metadata` to the dataframe, then append to file `labels.csv`.
 
         Args:
-            clustered (pd.DataFrame): cluster dataframe.
+            labels (pd.DataFrame): cluster labels dataframe.
             metadata (Any): Mandatory metadata that denotes the `n_clusters` hyperparameter used to
                 generate the cluster dataframe.
         """
-        df = clustered.copy()
+        df = labels.copy()
         df.insert(0, "n_clusters", metadata)
         if self.header:
             df.to_csv(self.opath, mode="w", index=False)
@@ -149,14 +165,17 @@ def main2(
     # Load, fit_predict, save.
     df = load_data(train_channel)
     if not sweep:
-        estimator, clustered = fit_predict(df, est_klass, est_kwargs)
+        estimator, labels, metrics = fit_predict(df, est_klass, est_kwargs)
         writer.save_model(estimator)
-        writer.save_clustered(clustered)
+        writer.save_labels(labels)
+        writer.save_metrics([metrics])
     else:
-        assert sweep_start > 0 and sweep_start <= sweep_end, "Invalid sweep range"
+        if not (0 < sweep_start <= sweep_end):
+            raise ValueError(f"Invalid sweep range: {[sweep_start, sweep_end]}")
 
+        metric_set = []
         for n_clusters in range(sweep_start, sweep_end + 1):
-            estimator, clustered = fit_predict(
+            estimator, labels, metrics = fit_predict(
                 df,
                 est_klass,
                 est_kwargs,
@@ -164,7 +183,9 @@ def main2(
             )
             # Metadata `n_clusters` for model's filename and output df's content.
             writer.save_model(estimator, n_clusters)
-            writer.save_clustered(clustered, n_clusters)
+            writer.save_labels(labels, n_clusters)
+            metric_set.append(metrics)
+        writer.save_metrics(metric_set, {"n_clusters": list(range(sweep_start, sweep_end + 1))})
 
 
 def load_data(path: Path) -> pd.DataFrame:
@@ -200,7 +221,7 @@ def fit_predict(
     algo: Type,
     hyperparams: Dict[str, Any],
     override_n_clusters: Optional[int] = None,
-) -> Tuple[ClusterMixin, pd.DataFrame]:
+) -> Tuple[ClusterMixin, pd.DataFrame, Dict[str, Any]]:
     """Cluster the dataframe.
 
     Args:
@@ -211,13 +232,34 @@ def fit_predict(
             estimator. Defaults to None.
 
     Returns:
-        Tuple[ClusterMixin, pd.DataFrame]: (estimator, clustered dataframe)
+        Tuple[ClusterMixin, pd.DataFrame, Dict[str, Any]]: (estimator, cluster labels, metrics)
     """
     estimator = create_estimator(algo, hyperparams, override_n_clusters)
     logger.info("estimator: %s", estimator)
 
-    clustered: np.ndarray = estimator.fit_predict(df.iloc[:, 1:])
-    return estimator, dfify_clusters(clustered, df)
+    X = df.iloc[:, 1:]
+    labels: np.ndarray = estimator.fit_predict(X)
+    cluster_metric = {
+        "calinski_harabasz_score": calinski_harabasz_score(X, labels),
+        "davies_bouldin_score": davies_bouldin_score(X, labels),
+        "silhouette_score": silhouette_score(X, labels),
+        "aic": try_metric(estimator, X, "aic"),
+        "bic": try_metric(estimator, X, "bic"),
+    }
+
+    return (
+        estimator,
+        dfify_clusters({"cluster_id": labels, "silhouette": silhouette_samples(X, labels)}, df),
+        cluster_metric,
+    )
+
+
+def try_metric(estimator: ClusterMixin, X: np.ndarray, name: str) -> Optional[float]:
+    try:
+        f = getattr(estimator, name)
+        return f(X)
+    except AttributeError:
+        return None
 
 
 def parse_estimator_cli_args(
@@ -260,18 +302,18 @@ def create_estimator(
     return estimator
 
 
-def dfify_clusters(a: np.ndarray, df: pd.DataFrame) -> pd.DataFrame:
+def dfify_clusters(cols: Dict[str, np.ndarray], df: pd.DataFrame) -> pd.DataFrame:
     """Concatenate cluster ids with their input features.
 
     Args:
-        a (np.ndarray): clustered data.
+        cols (Dict[str, np.ndarray]): Columns to prepend to df.
         df (pd.DataFrame): inputrecord ids and their features.
 
     Returns:
-        pd.DataFrame: clustered data with features.
+        pd.DataFrame: cluster labels with features.
     """
-    cluster = pd.Series(a, name="cluster_id")
-    retval = pd.concat([cluster, df], axis=1)
+    sers = [pd.Series(a, name=c) for c, a in cols.items()]
+    retval = pd.concat([*sers, df], axis=1)
     return retval
 
 

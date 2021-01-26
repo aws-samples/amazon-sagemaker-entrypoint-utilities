@@ -43,6 +43,6 @@ declare -a complex_args=(
     --callbacks.1.__class__ "dummyest.DummyCallback"
     --callbacks.1.0 "Checkpointer"
 )
-cmd="python $(get_bin_dir)/../examples/entrypoint${1}.py ${complex_args[@]}"
+cmd="python $(get_bin_dir)/entrypoint${1}.py ${complex_args[@]}"
 echo $cmd
 eval $cmd

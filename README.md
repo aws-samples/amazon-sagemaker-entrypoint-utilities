@@ -88,18 +88,20 @@ Sample runs:
 
 ```bash
 # Run entrypoint script outside of SageMaker.
-examples/entrypoint.sh
+examples/00-hello-world/entrypoint.sh
 
 # Mimic running on Amazon SageMaker: automatically off tqdm.
-SM_HOSTS=abcd examples/entrypoint.sh
+SM_HOSTS=abcd examples/00-hello-world/entrypoint.sh
 
 # Run click-version of entrypoint
-examples/entrypoint.sh -click
+examples/00-hello-world/entrypoint.sh -click
 ```
 
 To experiment with different hyperparameters, see `DummyEstimator` in
-`examples/dummyest.py`, and if necessary modify accordingly `complex_args` in
-`examples/entrypoint.sh`.
+`examples/00-hello-world/dummyest.py`, and if necessary modify accordingly
+`complex_args` in `examples/00-hello-world/entrypoint.sh`.
+
+Feel free to further explore other sample scripts under `examples/`.
 
 # 4. Security
 

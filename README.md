@@ -11,21 +11,29 @@ Table of contents:
 
 # 1. Overview
 
-This repo hosts an example of streamlining boiler-plate codes in SageMaker's
-*training* entrypoint script.
+This repo hosts a library and examples for writing SageMaker's *meta* training
+entrypoint scripts. The library also contains additional utilities to streamline
+boiler-plate codes in those scripts.
 
 The acronym `smepu` stands for **S**age**M**aker **e**ntry **p**oint
 **u**tilities.
 
 Main features:
 
-1. Configure logger to consistently send logs to Amazon CloudWatch log streams.
+1. Support the writing of *meta* entrypoint scripts for SageMaker training job.
+   To achieve this, `smepu` automatically deserializes hyperparameters from
+   CLI-args to Python datatypes, then passing-through the deserialized CLI-args
+   to a wrapped estimator.
 
-2. Passthrough CLI-args to a wrapped estimator, so the entrypoint autors do not
-have to write the boiler-plate codes that *"parses those 10+ CLI args, and calls
-another estimator with those args."*
-   * Implementation note: this is made possible thanks to the
+   Hence, entrypoint authors do not have to write the boiler-plate
+   codes that *"parses those 10+ CLI args, and calls another estimator with
+   those args. Then, rinse-and-repeat to 5 more scripts for 5 more different ML
+   algorithms."*
+
+   - Implementation note: this is made possible thanks to the
      `gluonts.core.serde.decode()` function.
+
+2. Configure logger to consistently send logs to Amazon CloudWatch log streams.
 
 3. Automatically disable fancy outputs when running as Amazon SageMaker training
 jobs.
@@ -36,6 +44,10 @@ jobs.
    [`wasabi`](https://github.com/ines/wasabi), and
    [`spacy`](https://github.com/explosion/spaCy) CLI (e.g., `train` or
    `convert`).
+
+With proper care, the meta entrypoint script can run on either SageMaker container
+(either as training jobs or as SageMaker *local* mode), or on your own Python
+(virtual) environment.
 
 # 2. Installation
 

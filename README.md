@@ -53,7 +53,7 @@ With proper care, the meta entrypoint script can run on either SageMaker contain
 
 ```bash
 pip install \
-    'git+https://github.com/aws-samples/amazon-sagemaker-entrypoint-utilities@master#egg=smepu'
+    'git+https://github.com/aws-samples/amazon-sagemaker-entrypoint-utilities@main#egg=smepu'
 ```
 
 or:

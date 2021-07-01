@@ -210,8 +210,7 @@ def load_data(path: Path) -> pd.DataFrame:
     # Treat null values in the dataframe.
     if df.isna().values.any():
         logger.warn('NA detected in input. To convert NA strings to "" and NA numbers to 0.0')
-        df.iloc[:, 0].fillna("", axis=1, inplace=True)
-        df.iloc[:, 1:].fillna(axis=1, inplace=True)
+        raise ValueError("Please implement your custom handling for missing value.")
 
     return df
 

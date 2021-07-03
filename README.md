@@ -30,7 +30,10 @@ Main features:
    those args. Then, rinse-and-repeat to 5 more scripts for 5 more different ML
    algorithms."*
 
-   - Implementation note: this is made possible thanks to the
+   Please go to `examples/` and look at the various `README.md` files to more
+   details.
+
+   **Implementation note:** this is made possible thanks to the
      `gluonts.core.serde.decode()` function.
 
 2. Configure logger to consistently send logs to Amazon CloudWatch log streams.

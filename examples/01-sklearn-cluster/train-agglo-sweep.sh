@@ -13,6 +13,7 @@ declare -a ARGS=(
     --sweep 1
     --sweep-start 2
     --sweep-end 4
+    # Additional agglomorative clustering kwargs (except for n_components) can be added below.
 )
 
 python train.py "${ARGS[@]}"

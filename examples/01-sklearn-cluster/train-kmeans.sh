@@ -10,6 +10,7 @@ declare -a ARGS=(
     --output-data-dir /tmp/kmeans/output/data/algo-1
     --train refdata
     --algo sklearn.cluster.KMeans
+    # From here onwards are the kwargs of sklearn.cluster.KMeans. Feel free to add more.
     --n_clusters 3
 )
 

@@ -70,14 +70,15 @@ pip install -e .
 
 **Pre-requisite**: know how to write an Amazon SageMaker training entrypoint.
 
-A working hello-world example is provided under `examples/`. There are two
-versions provided:
+A working hello-world example is provided under `examples/00-hello-world` which
+contains two kinds of meta-scripts:
 
 1. `entrypoint.py` uses `argparse` to parse hyperparameters.
 2. `entrypoint-click.py` uses `click` to parse hyperparameters.
 
-Use `examples/entrypoint.sh` to quickly observe the behavior of those train
-entrypoints when they run directly on your Python environment in your machine.
+Use `examples/00-hello-world/entrypoint.sh` to quickly observe the behavior of
+those train entrypoints when they run directly on your Python environment in
+your machine.
 
 > \[**NOTE**: **not to be confused** with "Amazon SageMaker local mode" which
 > refers to running the script on a SageMaker container running on a SageMaker

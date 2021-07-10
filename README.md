@@ -20,14 +20,14 @@ The acronym `smepu` stands for **S**age**M**aker **e**ntry **p**oint
 
 Main features:
 
-1. Support the writing of *meta* entrypoint scripts for SageMaker training job.
+1. Support the writing of *meta* entrypoint scripts for SageMaker training jobs.
    To achieve this, `smepu` automatically deserializes hyperparameters from
    CLI-args to Python datatypes, then passing-through the deserialized CLI-args
    to a wrapped estimator.
 
    Hence, entrypoint authors do not have to write the boiler-plate
    codes that *"parses those 10+ CLI args, and calls another estimator with
-   those args. Then, rinse-and-repeat to 5 more scripts for 5 more different ML
+   those args. Then, rinse-and-repeat in 5 more scripts for 5 more different ML
    algorithms."*
 
    Please go to `examples/` and look at the various `README.md` files to more
@@ -48,8 +48,8 @@ jobs.
    [`spacy`](https://github.com/explosion/spaCy) CLI (e.g., `train` or
    `convert`).
 
-With proper care, the meta entrypoint script can run on either SageMaker container
-(either as training jobs or as SageMaker *local* mode), or on your own Python
+With proper care, the meta entrypoint script can run on either a SageMaker container
+(either as training jobs or in SageMaker *local* mode), or on your own Python
 (virtual) environment.
 
 # 2. Installation
@@ -87,12 +87,12 @@ your machine.
 > refers to running the script on a SageMaker container running on a SageMaker
 > notebook instance.\]
 >
-> Running the train script directly on your Python environment is a useful trick
+> Running the train script directly in your Python environment is a useful trick
 > to speed-up your "dev + functional-test" cycle. Typically this stage utilizes
 > synthetic tiny dataset, and you heavily leverage your favorite dev tools
 > (i.e., unit-test frameworks, code debuggers, etc.).
 >
-> After this, you can perform "compatibility test" by running your train script
+> After this, you can perform a "compatibility test" by running your train script
 > on a Amazon SageMaker training container (whether on "Amazon SageMaker local
 > mode" or a training instance), to iron-out compatibilities issues.
 >

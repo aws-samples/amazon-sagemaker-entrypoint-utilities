@@ -1,4 +1,4 @@
-Both `entrypoint.py` and `entrypoint-click.py` show the minimal working examples
+Both `entrypoint.py` and `entrypoint-click.py` show minimal working examples
 of how to use `smepu` to write meta-entrypoint scripts that can run as SageMaker
 training jobs.
 
@@ -12,11 +12,11 @@ structure:
 
 2. Instantiate an instance of estimator with hyperparameters as the kwargs to
    the estimator class, e.g., `EstimatorClass(hyperparam_a=1, hyperparam_b=4)`.
-   This is where `smepu` can help by automatically parse the hyperparameters
-   cli args and converts those cli args to a `kwargs` dictionary.
+   This is where `smepu` can help by automatically parsing the hyperparameters
+   cli args and converting those cli args to a `kwargs` dictionary.
 
-3. The rest are typical of training script, mainly `fit()`, validation, and
-   save the fitted estimator into 1+ file(s).
+3. The rest are typical of a training script, mainly `fit()`, validation, and
+   saving the fitted estimator into 1+ file(s).
 
 Normally, for step (1a) and (2), the script hardcodes two things:
 

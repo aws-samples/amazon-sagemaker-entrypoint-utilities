@@ -4,7 +4,7 @@ sklearn clustering algorithms</div>
 # Overview of this examples
 
 This is an example of a SageMaker training meta-script, where this one single
-script can be used to call different sklearn clustering algorithm.
+script can be used to call different sklearn clustering algorithms.
 
 The `train.py` script supports two modes:
 
@@ -16,7 +16,7 @@ The `train.py` script supports two modes:
    additional hyperparameters (i.e., kwargs) supported by
    `sklearn.cluster.KMeans`.
 
-   As a further exercise, try to modify this shell script to make it instructs
+   As a further exercise, try to modify this shell script to make it instruct
    `train.py` to run GMM using `sklearn.mixture.GaussianMixture`. Tips: recall
    that sklearn's GMM uses `n_components` kwargs to denote the number of
    clusters.
@@ -33,13 +33,13 @@ The `train.py` script supports two modes:
 
 # Final note on the quick-start examples (i.e., `*.sh`)
 
-These are provided so that you can quickly, directly run `train.py` on your own
+These are provided so that you can quickly, directly run `train.py` in your own
 Python virtual environments. As you review the `*.sh` files, you'll notice that
-it loads a sample input data, and save the fitted estimators + evaluation
+it loads sample input data, and saves the fitted estimators + evaluation
 metrics to `/tmp`.
 
 To run `train.py` on SageMaker containers (either as SageMaker *local* mode,
-or as SageMaker training jobs), please refer to SageMaker SDK documentations and
+or as SageMaker training jobs), please refer to SageMaker SDK documentation and
 examples.
 
 # Sample invocation directly on a Python virtual environment
@@ -50,9 +50,9 @@ scikit-learn to it.
 You'll need to activate your Python virtual environment, then run the quick
 starts.
 
-Once again, to run `train.py` on SageMaker container (whether as the SageMaker
+Once again, to run `train.py` on a SageMaker container (whether as the SageMaker
 local mode, or as a SageMaker training jobs), please refer to the SageMaker
-SDK documentations and examples.
+SDK documentation and examples.
 
 ## Quick-start `train-kmeans.sh`
 

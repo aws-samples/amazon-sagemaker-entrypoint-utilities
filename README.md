@@ -31,7 +31,9 @@ Main features:
    algorithms."*
 
    Please go to `examples/` and look at the various `README.md` files to more
-   details.
+   details. For a more complete, sophisticated example, please also look at
+   this [AWS blog post](https://aws.amazon.com/blogs/industries/novartis-ag-uses-amazon-sagemaker-and-gluonts-for-demand-forecasting/)
+   and [its companion gluonts example](https://github.com/aws-samples/amazon-sagemaker-gluonts-entrypoint).
 
    **Implementation note:** this is made possible thanks to the
      `gluonts.core.serde.decode()` function.

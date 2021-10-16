@@ -1,5 +1,4 @@
-<div style="font-size:200%;font-weight:bold">Utilities for Amazon SageMaker
-Training Entrypoint</div>
+# Utilities for Amazon SageMaker Training Entrypoint <!-- omit in toc -->
 
 Table of contents:
 
